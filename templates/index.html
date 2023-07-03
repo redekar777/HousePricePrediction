@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" integrity="sha384-PJsj/BTMqILvmcej7ulplguok8ag4xFTPryRq8xevL7eBYSmpXKcbNVuy+P0RMgq" crossorigin="anonymous">
+
+    <title>House Price Predictor</title>
+  </head>
+  <body class="bg-dark">
+    <div class="container">
+      <div class="row">
+        <div class="card" style="width: 100%; height: 100%; margin-top: 50px">
+          <div class="card-header" style="text-align: center">
+            <h1>Welcome to House Price Predictor</h1>
+          </div>
+          <div class="card-body">
+            <form method="post" accept-charset="utf-8">
+
+              <div class="row">
+                <div class="col-md-6 form-group" style="text-align:center">
+                  <label><b>Enter No. of BHK</b></label>
+                  <input type="text" class="form-control" id="bhk" name="bhk" placeholder="Enter BHK" style="text-align:left">
+                </div>
+                <div class="col-md-6 form-group" style="text-align: center">
+                  <label><b>Select the Location</b></label>
+                  <select class="selectpicker form-control" id="location" name="location" required="1" style="text-align:left">
+                    {% for location in locations %}
+                    <option value="{{ location }}">{{ location }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-6 form-group" style="text-align:center">
+                  <label><b>Enter No. of bathrooms</b></label>
+                  <input type="text" class="form-control" id="bath" name="bath" placeholder="Enter No. of Bathrooms" style="text-align:left">
+                </div>
+                <div class="col-md-6 form-group" style="text-align: center">
+                  <label><b>Enter Square Feet</b></label>
+                  <input type="text" class="form-control" id="total_sqft" name="total_sqft" placeholder="Enter Square Feet" style="text-align:left">
+                </div>
+                <div class="col-md-12 form-group" style="margin-top:25px">
+                  <button class="btn btn-primary form-control" onclick="send_data()">Predict Price</button>
+                </div>
+              </div>
+            </form>
+            <br>
+            <div class="col-md-12" style="text-align: center">
+              <h3><span id="prediction"></span></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function form_handler(event) {
+        event.preventDefault();
+      }
+
+      document.querySelector('form').addEventListener("submit", form_handler);
+
+      function send_data() {
+        var fd = new FormData(document.querySelector('form'));
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/predict', true);
+        document.getElementById("prediction").innerHTML = "The Model is predicting the Price";
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            document.getElementById('prediction').innerHTML = "Predicted Price ₹ : " + xhr.responseText ;
+          }
+        };
+        xhr.send(fd);
+      }
+    </script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+
+  </body>
+</html>
